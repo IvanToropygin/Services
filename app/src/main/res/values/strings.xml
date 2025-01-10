@@ -4,6 +4,7 @@
     <string name="foreground_service">Foreground Service</string>
     <string name="intent_service">Intent Service</string>
     <string name="job_dispatcher">Job Scheduler</string>
+    <string name="job_dispatcher_2">Job Scheduler2</string>
     <string name="job_intent_service">Job Intent Service</string>
     <string name="alarm_manager">Alarm Manager</string>
     <string name="work_manager">Work Manager</string>
