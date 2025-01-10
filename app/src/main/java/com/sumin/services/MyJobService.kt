@@ -3,7 +3,6 @@ package com.sumin.services
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Intent
-import android.os.IBinder
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,14 +25,21 @@ class MyJobService : JobService() {
         log("onDestroy")
     }
 
-    override fun onStartJob(p0: JobParameters?): Boolean {
+    override fun onStartJob(params: JobParameters?): Boolean {
         log("onStartJob")
         scope.launch {
-            for (i in 0 until 10) {
-                delay(1_000L)
-                log("Timer: $i")
+            var workItem = params?.dequeueWork()
+            while (workItem != null) {
+                val page = workItem.intent?.getIntExtra(PAGE_KEY, 0)
+
+                for (i in 0 until 3) {
+                    delay(1_000L)
+                    log("Page:$page Timer: $i")
+                }
+                params?.completeWork(workItem)
+                workItem = params?.dequeueWork()
             }
-            jobFinished(p0, false)
+            jobFinished(params, true)
         }
         return true
     }
@@ -49,5 +55,10 @@ class MyJobService : JobService() {
 
     companion object {
         const val COMPONENT_ID = 123
+        const val PAGE_KEY = "page_key"
+
+        fun newIntent(pageNum: Int): Intent {
+            return Intent().apply { putExtra(PAGE_KEY, pageNum) }
+        }
     }
 }
